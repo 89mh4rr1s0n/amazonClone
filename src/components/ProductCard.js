@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { StarIcon } from '@heroicons/react/solid';
 import Currency from 'react-currency-formatter';
+import { useDispatch } from 'react-redux';
+import { addToBasket } from '../slices/basketSlice';
 
 const MAX_RATING = 5
 const MIN_RATING = 1
@@ -13,6 +15,21 @@ const ProductCard = (props) => {
     )
 
     const [hasPrime] = useState(Math.random() < 0.5)
+    const dispatch = useDispatch();
+
+    const addItemToBasket = () => {
+        const product = {
+            id: props.id,
+            title: props.title,
+            price: props.price,
+            description: props.description,
+            category: props.category,
+            image: props.image,
+            hasPrime: hasPrime
+        };
+
+        dispatch(addToBasket(product))
+    }
 
 
   return (<>
@@ -30,7 +47,7 @@ const ProductCard = (props) => {
 
       <div className='flex'>
           {Array(rating).fill().map((_, i) => (
-              <StarIcon className='h-5 text-yellow-500'/>
+              <StarIcon key={i} className='h-5 text-yellow-500'/>
           ))}
       </div>
 
@@ -47,7 +64,9 @@ const ProductCard = (props) => {
           </div>
       )}
 
-      <button className='mt-auto button'>Add to Basket</button>
+      <button 
+      onClick={addItemToBasket}
+      className='mt-auto button'>Add to Basket</button>
   </div>
   </>)
 };
